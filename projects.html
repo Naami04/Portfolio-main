@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Projets — Mohamed NAAMI</title>
+
+  <meta
+    name="description"
+    content="Projets de Mohamed NAAMI : plateforme ENR (RATITEC), gestion de stock (El Amrani Fluide) et projets académiques (Python, Laravel, Java Swing, C#)."
+  />
+
+  <link href="assets/icons/favicon.ico" rel="icon"/>
+  <link href="assets/css/style.css" rel="stylesheet"/>
+
+  <!-- Styles modale projet (spécifiques à cette page) -->
+  <style>
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 999;
+      font-family: inherit;
+    }
+    .project-modal.open { display: block; }
+    .project-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+    }
+    .project-modal-dialog {
+      position: relative;
+      max-width: 720px;
+      width: 90%;
+      margin: 5vh auto;
+      background: radial-gradient(circle at top, rgba(0, 120, 80, 0.18), #070909);
+      border-radius: 24px;
+      padding: 24px 24px 20px;
+      border: 1px solid rgba(0, 255, 153, 0.25);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.85);
+      color: #f8fafc;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .project-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      border: none;
+      background: rgba(15, 23, 42, 0.8);
+      color: #e5e7eb;
+      border-radius: 999px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .project-modal-close:hover {
+      background: rgba(0, 255, 153, 0.25);
+      transform: translateY(-1px);
+    }
+    .project-modal-body h2 { font-size: 1.5rem; margin-bottom: 4px; }
+    .project-modal-meta { font-size: 0.9rem; color: #9ca3af; margin-bottom: 14px; }
+    .project-modal-body p { line-height: 1.6; margin-bottom: 10px; }
+    .project-modal-body ul { padding-left: 1.1rem; margin: 10px 0 6px; }
+    .project-modal-body li { margin-bottom: 4px; }
+    .project-modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .project-modal-actions .btn { padding-inline: 18px; border-radius: 999px; }
+    .project-modal-actions .btn.primary {
+      background: linear-gradient(120deg, #00ff99, #00c26e);
+      color: #020617;
+      border: none;
+    }
+
+    /* Visuel “projet pro” cliquable */
+    .card.project.project-pro {
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .card.project.project-pro:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+    }
+    .card.project.project-pro::before {
+      content: "Projet professionnel";
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: rgba(0, 120, 80, 0.35);
+      border: 1px solid rgba(0, 255, 153, 0.5);
+      color: #d1fae5;
+    }
+
+    @media (max-width: 640px) {
+      .project-modal-dialog { margin-top: 9vh; padding: 20px 16px 16px; border-radius: 18px; }
+      .project-modal-body h2 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html">MOHAMED NAAMI</a>
+      <button aria-expanded="false" aria-label="Ouvrir le menu" class="nav-toggle">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a class="btn" href="about.html">À propos</a>
+        <a class="btn" href="projects.html">Projets</a>
+        <a class="btn" href="certifications.html">Certifications</a>
+        <a class="btn" href="skills.html">Compétences</a>
+        <a class="btn" href="contact.html">Contact</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="projets">
+    <h2 class="reveal">Projets</h2>
+
+    <p class="muted reveal" style="margin-top:-10px;">
+      Une sélection de projets professionnels et académiques : plateforme ENR (RATITEC), gestion de stock (El Amrani Fluide),
+      et projets réalisés en Python, Laravel, Java Swing et C#.
+    </p>
+
+    <div class="tabs card reveal" role="tablist" aria-label="Catégories de projets">
+      <button class="tab active" role="tab" aria-selected="true" data-category="">Tous</button>
+      <button class="tab" role="tab" aria-selected="false" data-category="professionnel">Professionnels</button>
+      <button class="tab" role="tab" aria-selected="false" data-category="academique">Académiques</button>
+    </div>
+
+    <div class="filterbar card reveal">
+      <input id="searchInput" type="search" placeholder="Rechercher par titre, techno..." aria-label="Rechercher des projets" />
+
+      <select id="techSelect" aria-label="Filtrer par techno">
+        <option value="">Toutes les technos</option>
+
+        <!-- Langages -->
+        <option>PHP</option>
+        <option>JavaScript</option>
+        <option>Python</option>
+        <option>Java</option>
+        <option>C#</option>
+        <option>C++</option>
+
+        <!-- Frameworks / libs -->
+        <option>Laravel</option>
+        <option>React</option>
+        <option>Next.js</option>
+        <option>.NET</option>
+
+        <!-- DB -->
+        <option>MySQL</option>
+        <option>Oracle</option>
+        <option>PL/SQL</option>
+
+        <!-- Outils -->
+        <option>Git</option>
+        <option>GitHub</option>
+        <option>Maven</option>
+        <option>WAMP</option>
+        <option>Microsoft Azure</option>
+
+        <!-- Méthodo -->
+        <option>UML</option>
+        <option>MERISE</option>
+        <option>Agile (Scrum)</option>
+      </select>
+
+      <select id="yearSelect" aria-label="Filtrer par année">
+        <option value="">Toutes les années</option>
+        <option>2025</option>
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+        <option>2021</option>
+      </select>
+
+      <button class="btn" id="clearFilters">Réinitialiser</button>
+    </div>
+
+    <div class="cards" id="projectGrid"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><p class="muted">© <span id="year"></span> Mohamed NAAMI. Tous droits réservés.</p></div>
+</footer>
+
+<!-- MODALE DÉTAIL PROJET (doit être AVANT les scripts JS) -->
+<div class="project-modal" id="projectModal" aria-hidden="true">
+  <div class="project-modal-backdrop"></div>
+  <div class="project-modal-dialog">
+    <button class="project-modal-close" aria-label="Fermer">✕</button>
+    <div class="project-modal-body"><!-- injecté en JS --></div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/projects.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/projects-page.js"></script>
+</body>
+</html>
